@@ -1,0 +1,74 @@
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <title>QR Code Generator with CSV</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 align-self-center" style="margin-top: 13%;">
+          <h1 class="text-center text-light">
+            CSV File to QR code
+          </h1>
+          <form>
+            <div class="form-group">
+              <label for="input_text" class="text-white">Tagihan Untuk ?</label>
+              <select class="form-control" id="option">
+                <option value="air">Air</option>
+                <option value="listrik">Listrik</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input_text"></label>
+              <input
+                type="file"
+                class="form-control form-control-lg	"
+                id="input_text"
+                placeholder="Enter Your Text Here"
+              />
+            </div>
+
+            <button type="button" id="gen" class="btn btn-danger btn-block">
+              Generate QR Code
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.querySelector('#gen').addEventListener('click', function() {
+        let fileCsv = document.querySelector('#input_text').files[0];
+        let name = document.querySelector('#option').value;
+        if (fileCsv !== '') {
+          const formData = new FormData();
+          formData.append('csvFile', fileCsv);
+          formData.append('folder', name);
+
+          var xhttp = new XMLHttpRequest();
+          xhttp.open('POST', '/qrcode');
+          xhttp.send(formData);
+        }
+      });
+    </script>
+  </body>
+</html>
