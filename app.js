@@ -17,6 +17,9 @@ app.use(express.static('./assets'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res, next) => {
+  // var air = fs.readdirSync(`./assets/qrcode/air`);
+  // var listrik = fs.readdirSync(`./assets/qrcode/listrik`);
+  // console.log(`Success generate qr code: `, air.length, listrik.length);
   res.render('index');
 });
 
@@ -34,8 +37,17 @@ app.post('/qrcode', upload.single('csvFile'), async (req, res, next) => {
     .pipe(csv())
     .on('data', function(data) {
       try {
-        const options = { errorCorrectionLevel: 'H', width: 308 };
-        QRCode.toDataURL(JSON.stringify(data), options, function(_, url) {
+        //format qr code unitID;unitName;floorName;towerName;billTypeID;billTypeName
+        let dataQrCode = `${data.unitID};${data.unitName};${data.floorName};${data.towerName};${data.biilTypeID};${data.billTypeName}`;
+
+        const options = {
+          errorCorrectionLevel: 'L',
+          scale: 5,
+          margin: 2,
+          maskPattern: 2,
+          width: 76,
+        };
+        QRCode.toDataURL(dataQrCode, options, function(_, url) {
           generateCanvas(url, `${data.unitName}-${data.billTypeName}`, folder);
         });
       } catch (err) {
