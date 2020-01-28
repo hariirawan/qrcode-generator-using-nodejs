@@ -20,13 +20,13 @@ app.use(express.static("./assets"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res, next) => {
-  if (!fs.existsSync(`./assets/qrcode/air`)) {
-    fs.mkdirSync(`./assets/qrcode/air`);
-  }
+  // if (!fs.existsSync(`./assets/qrcode/air`)) {
+  //   fs.mkdirSync(`./assets/qrcode/air`);
+  // }
 
-  if (!fs.existsSync(`./assets/qrcode/listrik`)) {
-    fs.mkdirSync(`./assets/qrcode/listrik`);
-  }
+  // if (!fs.existsSync(`./assets/qrcode/listrik`)) {
+  //   fs.mkdirSync(`./assets/qrcode/listrik`);
+  // }
 
   res.render("index");
 });
