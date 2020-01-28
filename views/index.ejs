@@ -44,6 +44,9 @@
             <button type="button" id="gen" class="btn btn-danger btn-block">
               Generate QR Code
             </button>
+            <a href="/testing" type="button" id="down" class="btn btn-primary btn-block">
+              Download Pdf
+            </a>
           </form>
         </div>
       </div>
@@ -56,6 +59,7 @@
     ></script>
 
     <script>
+      var xhttp = new XMLHttpRequest();
       document.querySelector('#gen').addEventListener('click', function() {
         let fileCsv = document.querySelector('#input_text').files[0];
         let name = document.querySelector('#option').value;
@@ -64,7 +68,6 @@
           formData.append('csvFile', fileCsv);
           formData.append('folder', name);
 
-          var xhttp = new XMLHttpRequest();
           xhttp.open('POST', '/qrcode');
           xhttp.send(formData);
         }

@@ -5,8 +5,11 @@ import csv from 'csv-parser';
 import stream from 'stream';
 import QRCode from 'qrcode';
 import fs from 'fs';
-import { generateCanvas } from './helpers';
+import { generateCanvas, readTotalQR } from './helpers';
 
+const path = require('path');
+
+const zl = require('zip-lib');
 const app = express();
 const storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
@@ -17,10 +20,13 @@ app.use(express.static('./assets'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res, next) => {
-  // var air = fs.readdirSync(`./assets/qrcode/air`);
-  // var listrik = fs.readdirSync(`./assets/qrcode/listrik`);
-  // console.log(`Success generate qr code: `, air.length, listrik.length);
   res.render('index');
+});
+
+app.get('/testing', function(req, res, next) {
+  var filePath = './assets'; // Or format the path using the `id` rest param
+  var fileName = 'qrcode.zip'; // The default name the browser will use
+  res.download(path.join(filePath, fileName));
 });
 
 app.post('/qrcode', upload.single('csvFile'), async (req, res, next) => {
@@ -48,7 +54,7 @@ app.post('/qrcode', upload.single('csvFile'), async (req, res, next) => {
           width: 76,
         };
         QRCode.toDataURL(dataQrCode, options, function(_, url) {
-          generateCanvas(url, `${data.unitName}-${data.billTypeName}`, folder);
+          generateCanvas(url, `${data.unitName.split('/').join('-')}-${data.billTypeName}`, folder);
         });
       } catch (err) {
         console.log(err);
@@ -57,6 +63,17 @@ app.post('/qrcode', upload.single('csvFile'), async (req, res, next) => {
     .on('end', function() {
       console.log('Generate qr code selesai');
     });
+
+  await zl.archiveFolder('./assets/qrcode', './assets/qrcode.zip').then(
+    function() {
+      console.log('done');
+    },
+    function(err) {
+      console.log(err);
+    },
+  );
+
+  await readTotalQR();
 });
 
 app.listen(1994, () => console.log('Server started at port 1994'));
