@@ -4,7 +4,6 @@ import multer from "multer";
 import csv from "csv-parser";
 import stream from "stream";
 import QRCode from "qrcode";
-import fs from "fs";
 import { generateCanvas, readTotalQR, deleteFolderRecursive } from "./helpers";
 
 const path = require("path");
