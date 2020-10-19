@@ -19,18 +19,12 @@ app.use(express.static("./assets"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res, next) => {
-  // if (!fs.existsSync(`./assets/qrcode/air`)) {
-  //   fs.mkdirSync(`./assets/qrcode/air`);
-  // }
-
-  // if (!fs.existsSync(`./assets/qrcode/listrik`)) {
-  //   fs.mkdirSync(`./assets/qrcode/listrik`);
-  // }
+  readTotalQR();
 
   res.render("index");
 });
 
-app.get("/testing", function(req, res, next) {
+app.get("/testing", function (req, res, next) {
   var filePath = "./assets"; // Or format the path using the `id` rest param
   var fileName = "qrcode.zip"; // The default name the browser will use
   res.download(path.join(filePath, fileName));
@@ -43,7 +37,7 @@ app.post("/qrcode", upload.single("csvFile"), async (req, res, next) => {
   bufferStream.end(new Buffer.from(bufferCSV));
   await bufferStream
     .pipe(csv())
-    .on("data", function(data) {
+    .on("data", function (data) {
       try {
         let dataQrCode = `${data.unitID};${data.unitName};${data.floorName};${data.towerName};${data.biilTypeID};${data.billTypeName}`;
 
@@ -52,9 +46,9 @@ app.post("/qrcode", upload.single("csvFile"), async (req, res, next) => {
           scale: 5,
           margin: 2,
           maskPattern: 2,
-          width: 76
+          width: 76,
         };
-        QRCode.toDataURL(dataQrCode, options, function(_, url) {
+        QRCode.toDataURL(dataQrCode, options, function (_, url) {
           generateCanvas(
             url,
             `${data.unitName.split("/").join("-")}-${data.billTypeName}`,
@@ -65,18 +59,25 @@ app.post("/qrcode", upload.single("csvFile"), async (req, res, next) => {
         console.log(err);
       }
     })
-    .on("end", function() {
+    .on("end", function () {
+      // if (data.billTypeName == "AIR") {
+      //   var air = fs.readdirSync(`./public/qr/air`);
+      //   console.log(`Success generate qr code: `, air.length);
+      // } else {
+      //   var listrik = fs.readdirSync(`./public/qr/listrik`);
+      //   console.log(`Success generate qr code: `, listrik.length);
+      // }
       console.log("Generate qr code selesai");
     });
 
-  await zl.archiveFolder("./assets/qrcode", "./assets/qrcode.zip").then(
-    function() {
-      console.log("done");
-    },
-    function(err) {
-      console.log(err);
-    }
-  );
+  // await zl.archiveFolder("./assets/qrcode", "./assets/qrcode.zip").then(
+  //   function () {
+  //     console.log("done");
+  //   },
+  //   function (err) {
+  //     console.log(err);
+  //   }
+  // );
 
   await readTotalQR();
 });
