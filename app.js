@@ -39,7 +39,7 @@ app.post("/qrcode", upload.single("csvFile"), async (req, res, next) => {
     .pipe(csv())
     .on("data", function (data) {
       try {
-        let dataQrCode = `${data.unitID};${data.unitName};${data.floorName};${data.towerName};${data.biilTypeID};${data.billTypeName}`;
+        let dataQrCode = `${data.unitID};${data.unitName};${data.floorName};${data.towerName};${data.billTypeID};${data.billTypeName}`;
 
         const options = {
           errorCorrectionLevel: "L",
